@@ -856,6 +856,7 @@ function sendGAPageView() {
 }
 
 function initLanguageSwitcher() {
+  const currentLang = window.location.pathname.startsWith("/it") ? "it" : "en";
 
   const getHrefForLang = (targetLang) => {
     const currentPath = window.location.pathname;
@@ -877,6 +878,27 @@ function initLanguageSwitcher() {
     const label = btn?.getAttribute("aria-label")?.trim().toLowerCase();
     if (!btn || !label) return;
 
+    const wrap = item.querySelector(".button_main_wrap");
+    const isCurrent = label === currentLang;
+
+    if (isCurrent) {
+      // Lingua corrente: disabilita hover, click e riduci opacità
+      if (wrap) {
+        wrap.style.opacity = "0.5";
+        wrap.style.pointerEvents = "none";
+      }
+      btn.disabled = true;
+      btn.dataset.langBound = "true";
+      return;
+    }
+
+    // Lingua non corrente: ripristina stato
+    if (wrap) {
+      wrap.style.opacity = "";
+      wrap.style.pointerEvents = "";
+    }
+    btn.disabled = false;
+
     if (btn.dataset.langBound) return;
     btn.dataset.langBound = "true";
 
@@ -885,7 +907,7 @@ function initLanguageSwitcher() {
       e.stopImmediatePropagation();
 
       const href = getHrefForLang(label);
-      if (!href) return; // già nella lingua corretta
+      if (!href) return;
 
       window.location.href = href;
     });
