@@ -2499,6 +2499,7 @@ function initSmoothySlider() {
 // STICKY STEP [data-sticky-steps-init]
 // -----------------------------------------
 
+
 function initStickyStepsBasic() {
   const containers = document.querySelectorAll("[data-sticky-steps-init]");
   if (!containers.length) return;
@@ -2507,32 +2508,67 @@ function initStickyStepsBasic() {
     const items = [...container.querySelectorAll("[data-sticky-steps-item]")];
     if (!items.length) return;
 
-    const visuals = items.map(item => item.querySelector(".sticky-steps__visual")).filter(Boolean);
+    const visuals = items.map(item =>
+      item.querySelector(".sticky-steps__visual")
+    ).filter(Boolean);
 
-    // ─── INIT STATES ─────────────────────────────────────────────────────
-    visuals.forEach((v) => gsap.set(v, { autoAlpha: 0 }));
+    const anchors = items
+      .map(item => item.querySelector("[data-sticky-steps-anchor]"))
+      .filter(Boolean);
 
-    // ─── REVEAL LAYOUT ────────────────────────────────────────────────────
+    // Se gli anchor non coincidono 1:1 con i visuals, usiamo l'index
+    // per ricavare la visual corrispondente all'anchor
+    const anchorVisuals = anchors.map((anchor, i) => {
+      // Trova l'item parent dell'anchor e poi il suo visual
+      const parentItem = anchor.closest("[data-sticky-steps-item]");
+      return parentItem?.querySelector(".sticky-steps__visual") || visuals[i] || null;
+    });
+
+    // ─── INIT STATES ────────────────────────────────────────────────────
+    visuals.forEach(v => gsap.set(v, { autoAlpha: 0 }));
+
+    // ─── LAYOUT DETECTION ───────────────────────────────────────────────
     let isStacked = false;
     const checkLayout = () => {
       const containerWidth = container.getBoundingClientRect().width;
-      const rootFontSize   = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
       isStacked = containerWidth < 38 * rootFontSize;
     };
 
     checkLayout();
     requestAnimationFrame(checkLayout);
 
+    let currentActive = -1;
+
+    // ─── CROSSFADE ───────────────────────────────────────────────────────
+    function activateVisual(index) {
+      if (isStacked) return;
+      currentActive = index;
+
+      visuals.forEach((v, i) => {
+        gsap.to(v, {
+          autoAlpha: i === index ? 1 : 0,
+          duration: 0.6,
+          ease: "power2.inOut",
+          overwrite: true,
+        });
+      });
+
+      items.forEach((item, i) => {
+        let status = i < index ? "before" : i > index ? "after" : "active";
+        item.setAttribute("data-sticky-steps-item-status", status);
+      });
+    }
+
+    // ─── RESIZE OBSERVER ────────────────────────────────────────────────
     const ro = new ResizeObserver(() => {
       const wasStacked = isStacked;
       checkLayout();
       if (wasStacked === isStacked) return;
 
       if (isStacked) {
-       
         visuals.forEach(v => gsap.set(v, { autoAlpha: 1 }));
       } else {
-        
         visuals.forEach((v, i) => {
           gsap.set(v, { autoAlpha: i === currentActive ? 1 : 0 });
         });
@@ -2540,38 +2576,10 @@ function initStickyStepsBasic() {
     });
     ro.observe(container);
 
-    // ─── CROSSFADE STEP (desktop) ─────────────────────────────────────────
-    let currentActive = 0;
-
-    function setActiveStep(activeIndex) {
-      items.forEach((item, index) => {
-        let status = "active";
-        if (index < activeIndex) status = "before";
-        if (index > activeIndex) status = "after";
-        item.setAttribute("data-sticky-steps-item-status", status);
-      });
-
-      if (activeIndex === currentActive) return;
-      currentActive = activeIndex;
-
-      if (isStacked) return;
-
-      visuals.forEach((v, i) => {
-        gsap.to(v, {
-          autoAlpha: i === activeIndex ? 1 : 0,
-          duration: 0.6,
-          ease: "power2.inOut",
-          overwrite: true,
-        });
-      });
-    }
-
-    // ─── FADE IN ──────────────────────────────────────────────────────────
-    
+    // ─── STACKED: fade-in su scroll per ogni visual ──────────────────────
     requestAnimationFrame(() => {
       if (isStacked) {
-        
-        visuals.forEach((v) => {
+        visuals.forEach(v => {
           ScrollTrigger.create({
             trigger: v,
             start: "top 90%",
@@ -2581,41 +2589,37 @@ function initStickyStepsBasic() {
             }
           });
         });
-      } else {
-        
-        ScrollTrigger.create({
-          trigger: container,
-          start: "top 90%",
-          once: true,
-          onEnter: () => {
-            gsap.to(visuals[0], { autoAlpha: 1, duration: 0.8, ease: "power2.out" });
-          }
-        });
+        return;
       }
-    });
 
-    // ─── SCROLL UPDATE (desktop only) ─────────────────────────────────────
-    const anchors = items
-      .map(item => item.querySelector("[data-sticky-steps-anchor]"))
-      .filter(Boolean);
+      // ─── DESKTOP: first visual fade-in al container ─────────────────
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top 90%",
+        once: true,
+        onEnter: () => {
+          if (currentActive === -1) activateVisual(0);
+        }
+      });
 
-    if (!anchors.length) return;
+      if (!anchors.length) return;
 
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top bottom",
-      end: "bottom top",
-      onUpdate: () => {
-        if (isStacked) return;
-        const viewportMid = window.innerHeight * 1.1;
-        let activeIndex = 0;
-        anchors.forEach((anchor, i) => {
-          const rect = anchor.getBoundingClientRect();
-          const anchorCenter = rect.top + rect.height / 2;
-          if (anchorCenter <= viewportMid) activeIndex = i;
+      // ─── DESKTOP ──────────
+
+      anchors.forEach((anchor, i) => {
+        ScrollTrigger.create({
+          trigger: anchor,
+
+          start: "top 50%",
+          onEnter: () => {
+            activateVisual(i);
+          },
+          onLeaveBack: () => {
+
+            activateVisual(Math.max(0, i - 1));
+          },
         });
-        setActiveStep(activeIndex);
-      },
+      });
     });
   });
 }
