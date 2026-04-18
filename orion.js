@@ -882,7 +882,6 @@ function initLanguageSwitcher() {
     const isCurrent = label === currentLang;
 
     if (isCurrent) {
-      // Lingua corrente: disabilita hover, click e riduci opacità
       if (wrap) {
         wrap.style.opacity = "0.5";
         wrap.style.pointerEvents = "none";
@@ -892,7 +891,6 @@ function initLanguageSwitcher() {
       return;
     }
 
-    // Lingua non corrente: ripristina stato
     if (wrap) {
       wrap.style.opacity = "";
       wrap.style.pointerEvents = "";
