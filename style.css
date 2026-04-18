@@ -1,0 +1,477 @@
+/* ==========================================================================
+   STUDIO OLIMPO — ORION SRL
+   Custom CSS
+   ========================================================================== */
+
+
+/* ==========================================================================
+   GLOBAL VARIABLES
+   ========================================================================== */
+
+:root {
+  --peek-offset: -7.5;
+  --viewport-height: 100dvh;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --peek-offset: -9;
+  }
+}
+
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Underline animato su <strong>
+   -------------------------------------------------------------------------- */
+
+[data-hero] strong {
+  border-bottom: none !important;
+  display: inline;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: 0.05em;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.7s ease;
+}
+
+[data-hero] strong.u-underline-visible {
+  text-decoration-color: currentColor;
+}
+
+[data-hero] .line {
+  overflow: visible;
+}
+
+
+/* ==========================================================================
+   SPLIT TEXT
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Heading mask + reveal
+   -------------------------------------------------------------------------- */
+
+[data-split="heading"] {
+  visibility: hidden;
+}
+
+.wf-design-mode [data-split="heading"],
+.w-editor [data-split="heading"] {
+  visibility: visible !important;
+}
+
+.line {
+  overflow: hidden;
+  padding-bottom: 0.05em;
+  margin-bottom: -0.05em;
+}
+
+h1 .line {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+
+/* ==========================================================================
+   LOADER
+   ========================================================================== */
+
+body.wf-design-mode [data-load-wrap] {
+  visibility: hidden !important;
+}
+
+[data-load-reset],
+[data-load-logo],
+[data-load-icon] {
+  opacity: 0;
+}
+
+[data-load-text] {
+  display: inline-block;
+  width: 4ch;
+  text-align: center;
+}
+
+.loader__bg-bar {
+  box-shadow: 0 0 18px 4px var(--swatch--light-100-o20);
+}
+
+.loader__loading-wrap {
+  position: relative;
+  flex-shrink: 0;
+  margin-inline: auto;
+  width: 14px;
+  height: 14px;
+}
+
+.loading_dot_center {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+  animation: pulse 1050ms ease-in-out infinite;
+}
+
+.loading_dot_top {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  animation: rotX 1050ms ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.loading_dot_bottom {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  animation: rotY 1050ms ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.loading_dot_top::before,
+.loading_dot_top::after,
+.loading_dot_bottom::before,
+.loading_dot_bottom::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.loading_dot_top::before { top: 0; left: 50%; transform: translateX(-50%); }
+.loading_dot_top::after { bottom: 0; left: 50%; transform: translateX(-50%); }
+.loading_dot_bottom::before { left: 0; top: 50%; transform: translateY(-50%); }
+.loading_dot_bottom::after { right: 0; top: 50%; transform: translateY(-50%); }
+
+@keyframes rotX {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes rotY {
+  0% { transform: rotate(90deg); }
+  100% { transform: rotate(450deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 2px rgba(255, 255, 255, 0.3); }
+  50% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 3px rgba(255, 255, 255, 0.6); }
+}
+
+
+/* ==========================================================================
+   PAGE TRANSITIONS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+.transition__dark {
+  opacity: 0;
+  background-color: var(--swatch--dark-900-o60);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Peek
+   -------------------------------------------------------------------------- */
+
+/* Variabili già definite in :root */
+
+
+/* ==========================================================================
+   NAVIGATION
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Menu hamburger hover
+   -------------------------------------------------------------------------- */
+
+@media (any-hover: hover) {
+  .menu_btn_wrap {
+    transition: opacity 0.7s ease;
+    will-change: opacity;
+  }
+
+  .menu_btn_wrap:hover {
+    opacity: 0.5;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Menu voci hover, opacity fade
+   -------------------------------------------------------------------------- */
+
+.nav_menu_item {
+  transition: opacity 0.7s ease;
+}
+
+.nav_menu_list:has(.nav_menu_item:hover) .nav_menu_item {
+  opacity: 0.3;
+}
+
+.nav_menu_list:has(.nav_menu_item:hover) .nav_menu_item:hover {
+  opacity: 1;
+}
+
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Hover slide up
+   -------------------------------------------------------------------------- */
+
+@media (any-hover: hover) {
+  .button_main_element {
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 0.3em;
+    margin-bottom: -0.3em;
+  }
+
+  .button_main_element:has(.u-text-style-h3) {
+    padding-bottom: 0.8em;
+    margin-bottom: -0.8em;
+  }
+
+  .button_main_text {
+    display: inline-block;
+    position: relative;
+    transform: translateY(0em) rotate(0.001deg);
+    transition: transform 0.8s cubic-bezier(0.625, 0.05, 0, 1);
+    text-shadow: 0 1.3em 0 currentColor;
+  }
+
+  .button_main_element.is--second .button_main_text {
+    transition-delay: 0.01s;
+  }
+
+  [data-trigger~="hover"]:hover .button_main_text {
+    transform: translateY(-1.3em) rotate(0.001deg);
+  }
+
+  .footer_wrap [data-trigger~="hover"]:hover .button_main_text {
+    transform: translateY(-1.3em) rotate(0.001deg);
+  }
+}
+
+
+/* ==========================================================================
+   STICKY STEPS
+   ========================================================================== */
+
+@media screen and (min-width: 992px) {
+  [data-sticky-steps-item-status] .sticky-steps__visual {
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  [data-sticky-steps-item-status="before"] .sticky-steps__visual,
+  [data-sticky-steps-item-status="active"] .sticky-steps__visual {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  [data-sticky-steps-item-status] .sticky-steps__text {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0.25;
+  }
+
+  [data-sticky-steps-item-status="active"] .sticky-steps__text {
+    opacity: 1;
+  }
+}
+
+.sticky-steps__list {
+  display: flex;
+  flex-flow: column;
+  flex: 1 1 0%;
+  gap: 15dvh 15dvh;
+  padding-top: calc(-15em + (0.5 * 100dvh));
+  padding-bottom: calc(-15em + (0.5 * 100dvh));
+}
+
+.sticky-steps__media {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.sticky-steps__sticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  width: 100%;
+  min-height: 100dvh;
+  align-items: center;
+}
+
+.sticky-steps__text {
+  display: flex;
+  width: 50%;
+  padding-right: 0;
+  margin-left: auto;
+  flex-flow: column;
+  gap: 2em;
+}
+
+.sticky-steps__text .w-richtext p {
+  text-align: justify;
+  text-align-last: left;
+}
+
+[data-sticky-text] {
+  max-width: 32ch;
+}
+
+
+/* ==========================================================================
+   LOGO WALL
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Cycle
+   -------------------------------------------------------------------------- */
+
+[data-logo-wall-list] [data-logo-wall-item]:nth-child(n+5) {
+  display: none;
+}
+
+[data-logo-wall-item] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-logo-wall-item] img:not([data-logo-wall-target]) {
+  display: none;
+}
+
+
+/* ==========================================================================
+   SMOOOTHY SLIDER
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   GPU + font rendering fix
+   -------------------------------------------------------------------------- */
+
+[data-smooothy="1"] .slider_w {
+  -webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+[data-smooothy="1"] .slide {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Container queries
+   -------------------------------------------------------------------------- */
+
+@container (width < 50em) {
+  .footer_bottom_list {
+    flex-flow: column;
+  }
+}
+
+@container (width < 38em) {
+  .sticky-steps__list {
+    padding-top: 10em;
+    padding-bottom: 10em;
+    gap: var(--_spacing---space--10);
+  }
+
+  .sticky-steps__media {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    height: auto;
+    padding-left: 0;
+    padding-bottom: var(--_spacing---space--9);
+  }
+
+  .sticky-steps__sticky {
+    position: relative;
+    top: auto;
+    min-height: auto;
+  }
+
+  .sticky-steps__text {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  [data-sticky-text] {
+    max-width: 100%;
+  }
+
+  .footer_bottom_layout {
+    flex-flow: column;
+  }
+
+  [data-logo-wall-list] [data-logo-wall-item]:nth-child(n+3) {
+    display: none;
+  }
+}
+
+
+/* ==========================================================================
+   PAGE SPECIFIC OVERRIDES
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Coming Soon, override loader text width
+   -------------------------------------------------------------------------- */
+
+[data-barba-namespace="soon"] [data-load-text] {
+  width: auto;
+}
+
+
+/* ==========================================================================
+   PERFORMANCE HINTS
+   ========================================================================== */
+
+[data-parallax="target"],
+[data-transition-panel],
+.sticky-steps__visual {
+  will-change: transform;
+}
