@@ -1622,9 +1622,30 @@ function initLogoRevealLoader() {
   if (typeof lockScroll === "function") lockScroll();
 
   // --- INIT STATES ---
-  gsap.set(wrap, { display: "block", y: "0vh" });
-  gsap.set(container, { autoAlpha: 1 });
-  gsap.set(bg, { yPercent: 0 });
+  const loaderSolidColor = "#061922";
+
+  gsap.set(wrap, {
+    display: "block",
+    y: "0vh",
+    backgroundColor: loaderSolidColor,
+    isolation: "isolate",
+    force3D: true,
+  });
+
+  gsap.set(container, { autoAlpha: 1, position: "relative", zIndex: 2 });
+
+  gsap.set(bg, {
+    yPercent: 0,
+    backgroundColor: loaderSolidColor,
+    opacity: 1,
+    autoAlpha: 1,
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: 0,
+    force3D: true,
+  });
 
   if (iconWrap) gsap.set(iconWrap, { autoAlpha: 0, x: -10 });
 
@@ -1650,12 +1671,10 @@ function initLogoRevealLoader() {
   if (resetTargets.length) gsap.set(resetTargets, { autoAlpha: 1 });
 
   if (transitionDark) {
-    const loaderBgColor = bg ? getComputedStyle(bg).backgroundColor : null;
-
     gsap.set(transitionWrap, { zIndex: 1 });
     gsap.set(transitionDark, {
       autoAlpha: 1,
-      backgroundColor: loaderBgColor || "#061922",
+      backgroundColor: loaderSolidColor,
     });
   }
 
