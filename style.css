@@ -99,7 +99,7 @@ body.wf-design-mode [data-load-wrap] {
   text-align: center;
 }
 
-.loader__bg-bar {
+/*.loader__bg-bar {
   box-shadow: 0 0 18px 4px var(--swatch--light-100-o20);
 }
 
@@ -176,6 +176,7 @@ body.wf-design-mode [data-load-wrap] {
   0%, 100% { box-shadow: 0 0 2px rgba(255, 255, 255, 0.3); }
   50% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 3px rgba(255, 255, 255, 0.6); }
 }
+*/
 
 
 /* ==========================================================================
