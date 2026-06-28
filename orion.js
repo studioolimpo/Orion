@@ -1650,8 +1650,13 @@ function initLogoRevealLoader() {
   if (resetTargets.length) gsap.set(resetTargets, { autoAlpha: 1 });
 
   if (transitionDark) {
+    const loaderBgColor = bg ? getComputedStyle(bg).backgroundColor : null;
+
     gsap.set(transitionWrap, { zIndex: 1 });
-    gsap.set(transitionDark, { autoAlpha: 1 });
+    gsap.set(transitionDark, {
+      autoAlpha: 1,
+      backgroundColor: loaderBgColor || "#061922",
+    });
   }
 
   // --- TIMING ---
