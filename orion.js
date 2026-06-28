@@ -1651,7 +1651,7 @@ function initLogoRevealLoader() {
 
   if (transitionDark) {
     gsap.set(transitionWrap, { zIndex: 1 });
-    gsap.set(transitionDark, { autoAlpha: 0.9 });
+    gsap.set(transitionDark, { autoAlpha: 1 });
   }
 
   // --- TIMING ---
